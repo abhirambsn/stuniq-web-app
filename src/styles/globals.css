@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .payment-bg {
+    @apply bg-[url('/bg.jpg')] bg-cover bg-center bg-opacity-20 backdrop-blur-xl;
+  }
+}

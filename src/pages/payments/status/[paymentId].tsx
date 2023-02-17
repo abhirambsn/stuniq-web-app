@@ -100,7 +100,7 @@ const PaymentStatusPage = (props: Props) => {
                       );
                     }
                     await navigator.clipboard.writeText(
-                      `http://localhost:3000/payment?paymentId=${paymentId}`
+                      `https://stuniq.vercel.app/payment?paymentId=${paymentId}`
                     );
                     toast.success("Copied to clipboard");
                   }}

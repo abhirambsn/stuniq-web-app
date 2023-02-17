@@ -57,7 +57,7 @@ const DashboardPage = (props: Props) => {
     const cnf = confirm("Are you sure you want to delete this account?");
     if (cnf) {
       const resp = await axios.delete(
-        "http://localhost:3000/api/accounts/delete",
+        "https://stuniq.vercel.app/api/accounts/delete",
         {
           headers: {
             Authorization: "Bearer " + token,

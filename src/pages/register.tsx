@@ -1,4 +1,3 @@
-import Navbar from "@/components/Navbar";
 import axios from "axios";
 import { useFormik } from "formik";
 import Head from "next/head";
@@ -6,6 +5,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import Link from "next/link";
 
 type Props = {};
 
@@ -123,12 +123,11 @@ const RegisterPage = (props: Props) => {
                 <span className="font-bold">Register</span>
               </button>
 
-              <a
-                href="/login"
-                className="text-sm hover:underline text-center text-gray-400"
-              >
-                Already Registered? Login
-              </a>
+              <Link href="/login" passHref>
+                <a className="text-sm hover:underline text-center text-gray-400">
+                  Already Registered? Login
+                </a>
+              </Link>
             </form>
           </div>
         </div>

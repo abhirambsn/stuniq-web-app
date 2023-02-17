@@ -4,11 +4,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineCopy,
-  AiOutlineLink,
-} from "react-icons/ai";
+import { AiOutlineArrowLeft, AiOutlineLink } from "react-icons/ai";
+import Link from "next/link";
 
 type Props = {};
 
@@ -79,12 +76,11 @@ const PaymentStatusPage = (props: Props) => {
           <div className="p-6 bg-black bg-opacity-50 rounded shadow-lg flex flex-col gap-5">
             <div className="flex items-center justify-between">
               <div className="flex space-x-4">
-                <a
-                  href="/payments/list"
-                  className="p-3 rounded border border-gray-600 items-center flex hover:opacity-50 transition-all duration-150 ease-in-out"
-                >
-                  <AiOutlineArrowLeft size={20} />
-                </a>
+                <Link href="/payments/list" passHref>
+                  <a className="p-3 rounded border border-gray-600 items-center flex hover:opacity-50 transition-all duration-150 ease-in-out">
+                    <AiOutlineArrowLeft size={20} />
+                  </a>
+                </Link>
                 <div className="flex flex-col">
                   <h2 className="text-2xl font-bold text-gray-50">
                     Payment Status

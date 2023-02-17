@@ -2,9 +2,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
-import yup from "yup";
 import axios from "axios";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import Link from "next/link";
 
 type Props = {};
 
@@ -88,12 +88,11 @@ const LoginPage = (props: Props) => {
                 <span className="font-bold">Login</span>
               </button>
 
-              <a
-                href="/register"
-                className="text-sm hover:underline text-center text-gray-400"
-              >
-                New User? Register Now
-              </a>
+              <Link href="/register" passHref>
+                <a className="text-sm hover:underline text-center text-gray-400">
+                  New User? Register Now
+                </a>
+              </Link>
             </form>
           </div>
         </div>

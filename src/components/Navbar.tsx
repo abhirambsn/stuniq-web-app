@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import Link from "next/link";
 
 type Props = {
   authenticated?: boolean;
@@ -11,20 +12,23 @@ const Navbar = ({ authenticated, avatar }: Props) => {
   return (
     <nav className="navbar sticky bg-none">
       <div className="flex-1">
-        <a
-          className="btn btn-ghost normal-case text-xl text-gray-50"
-          href={authenticated ? "/dashboard" : "/"}
-        >
-          Stuniq
-        </a>
+        <Link href={authenticated ? "/dashboard" : "/"} passHref>
+          <a className="btn btn-ghost normal-case text-xl text-gray-50">
+            Stuniq
+          </a>
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1 rounded-lg">
           <li>
-            <a href="/about">About</a>
+            <Link href="/about" passHref>
+              <a>About</a>
+            </Link>
           </li>
           <li>
-            <a href="/docs">Docs</a>
+            <Link href="/docs" passHref>
+              <a>Docs</a>
+            </Link>
           </li>
           {authenticated && (
             <li>
@@ -42,10 +46,15 @@ const Navbar = ({ authenticated, avatar }: Props) => {
               </a>
               <ul className="p-2 bg-[#0c0c0d]">
                 <li>
-                  <a href="/payments/create">Create Payment</a>
+                  <Link href="/payments/create" passHref>
+                    <a>Create Payment</a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/payments/list">All Payments</a>
+                  <Link href="/payments/list" passHref>
+                    {" "}
+                    <a>All Payments</a>
+                  </Link>
                 </li>
               </ul>
             </li>

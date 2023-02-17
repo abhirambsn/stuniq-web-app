@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 type Props = {};
@@ -9,22 +10,32 @@ const Footer = (props: Props) => {
         <h2 className="text-gray-50 font-bold text-2xl">Stuniq</h2>
         <ul>
           <li>
-            <a href="/about">About</a>
+            <Link href="/about" passHref>
+              <a>About</a>
+            </Link>
           </li>
           <li>
-            <a href="/docs">Docs</a>
+            <Link href="/docs" passHref>
+              <a>Docs</a>
+            </Link>
           </li>
           <li>
-            <a href="/policies">Policies</a>
+            <Link href="/policies">
+              <a>Policies</a>
+            </Link>
           </li>
         </ul>
 
         <ul>
           <li>
-            <a href="/contact">Contact Us</a>
+            <Link href="/contact" passHref>
+              <a>Contact Us</a>
+            </Link>
           </li>
           <li>
-            <a href="/sitemap.xml">Sitemap</a>
+            <Link href="/sitemap.xml" passHref>
+              <a>Sitemap</a>
+            </Link>
           </li>
         </ul>
       </section>

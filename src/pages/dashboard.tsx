@@ -15,7 +15,7 @@ const DashboardPage = (props: Props) => {
   const query = router.query;
 
   const [token, setToken] = useState<string>("");
-  const [data, setData] = useState({});
+  const [data, setData] = useState<UserData>();
 
   const [inProgress, setInProgress] = useState(false);
   const [address, setAddress] = useState<string>("");
@@ -199,7 +199,7 @@ const DashboardPage = (props: Props) => {
                     if (!navigator?.clipboard) {
                       toast.error("Clipboard API is not supported in your browser");
                     }
-                    await navigator.clipboard.writeText(query.apiKey);
+                    await navigator.clipboard.writeText(query.apiKey as string);
                     toast.success("Copied to clipboard");
                   }}
                   className="btn btn-ghost space-x-1"
@@ -226,7 +226,7 @@ const DashboardPage = (props: Props) => {
                     if (!navigator?.clipboard) {
                       toast.error("Clipboard API is not supported in your browser");
                     }
-                    await navigator.clipboard.writeText(query.privateKey);
+                    await navigator.clipboard.writeText(query.privateKey as string);
                     toast.success("Copied to clipboard");
                   }}
                   className="btn btn-ghost space-x-1"
@@ -261,15 +261,15 @@ const DashboardPage = (props: Props) => {
               <div className="flex items-center space-x-2">
                 <img
                   className="h-10 w-10 object-cover rounded-xl"
-                  src={data.image}
-                  alt={data.name}
+                  src={data?.image}
+                  alt={data?.name}
                 />
-                <span className="text-xl text-gray-50">{data.name}</span>
+                <span className="text-xl text-gray-50">{data?.name}</span>
               </div>
               <div className="flex space-x-2 items-center">
                 <h3 className="text-lg text-gray-50 font-bold">Member Since</h3>
                 <p className="text text-gray-50">
-                  {new Date(data.createdAt).toLocaleDateString("en-IN", {
+                  {new Date(data?.createdAt as string).toLocaleDateString("en-IN", {
                     dateStyle: "long",
                   })}
                 </p>
@@ -287,14 +287,14 @@ const DashboardPage = (props: Props) => {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="p-3 text-gray-50 text bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out">
-                  {data.address}
+                  {data?.address}
                 </span>
                 <button
                   onClick={async () => {
                     if (!navigator?.clipboard) {
                       toast.error("Clipboard API is not supported in your browser");
                     }
-                    await navigator.clipboard.writeText(data.address);
+                    await navigator.clipboard.writeText(data?.address as string);
                     toast.success("Copied to clipboard");
                   }}
                   className="btn btn-ghost space-x-1"

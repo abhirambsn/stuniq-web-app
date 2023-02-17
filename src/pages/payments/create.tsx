@@ -13,13 +13,14 @@ type Props = {};
 const CreatePaymentPage = (props: Props) => {
   const router = useRouter();
   const [token, setToken] = useState("");
-  const [data, setData] = useState({});
+  const [data, setData] = useState<UserData>();
 
   const currencyListMain = CurrencyList.getAll("en_IN");
 
-  let currencyList = [];
+  // @ts-ignore
+  let currencyList: FiatCurrencyData[] = [];
   Object.keys(currencyListMain).forEach((key) => {
-    currencyList.push(currencyListMain[key]);
+    currencyList.push(currencyListMain[key] as FiatCurrencyData);
   });
 
   const formik = useFormik({
@@ -243,9 +244,9 @@ const CreatePaymentPage = (props: Props) => {
                 className="p-3 text-gray-50 text-xl bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out"
               />
               <datalist id="currencies">
-                {currencyList.map((item) => (
-                  <option key={item.code} value={item.code}>
-                    {item.name}
+                {currencyList.map((item: FiatCurrencyData) => (
+                  <option key={item.code as any as string} value={item.code as any as string}>
+                    {item.name as any as string}
                   </option>
                 ))}
               </datalist>

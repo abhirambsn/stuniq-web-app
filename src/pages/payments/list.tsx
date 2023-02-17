@@ -12,7 +12,7 @@ const PaymentListPage = (props: Props) => {
 
   const [token, setToken] = useState<string>("");
   const [data, setData] = useState<any>({});
-  const [paymentData, setPaymentData] = useState<any>([]);
+  const [paymentData, setPaymentData] = useState<PaymentData[]>([] as PaymentData[]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -78,7 +78,7 @@ const PaymentListPage = (props: Props) => {
             </p>
           </div>
           <div className="overflow-x-auto  w-full">
-          {paymentData.length < 0 ? (
+          {paymentData?.length < 0 ? (
             <p>Loading...</p>
           ) : (
             <table className="table w-full bg-transparent">
@@ -118,7 +118,7 @@ const PaymentListPage = (props: Props) => {
                       {new Intl.NumberFormat("en-IN", {
                         style: "currency",
                         currency: payment.currency,
-                      }).format(payment.amount / 100)}
+                      }).format(payment.amount as number / 100)}
                     </td>
                     <td>{payment.currency}</td>
                     <td>

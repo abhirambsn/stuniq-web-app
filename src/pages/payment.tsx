@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import QRCode from "react-qr-code";
 import { hashMessage } from "@ethersproject/hash";
@@ -15,15 +15,15 @@ const PaymentPage = (props: Props) => {
   const router = useRouter();
   const { paymentId } = router.query;
 
-  const [paymentData, setPaymentData] = useState({});
+  const [paymentData, setPaymentData] = useState<PaymentData>();
   const [loading, setLoading] = useState(true);
 
   const [exchangeRate, setExchangeRate] = useState(0);
   const [chain, setChain] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [currencies, setCurrencies] = useState([]);
+  const [currencies, setCurrencies] = useState<Currency[]>([]);
 
-  const selectedCurrency = useRef();
+  const selectedCurrency = useRef<HTMLSelectElement>();
   const [url, setUrl] = useState("");
   const [txnHash, setTxnHash] = useState("");
 
@@ -33,17 +33,21 @@ const PaymentPage = (props: Props) => {
 
   const [mobilePayment, setMobilePayment] = useState(false);
 
-  const getCurrencyExchangeRate = async (e) => {
+  const getCurrencyExchangeRate = async (e: ChangeEvent<HTMLSelectElement>) => {
     let crypto = e.target.value;
     if (crypto === "ethereum-testnet") {
       setChain("5");
       crypto = "ethereum";
       setSymbol("ETH");
     } else {
-      setChain(currencies.find((c) => c.id === crypto)?.chainId);
-      setSymbol(currencies.find((c) => c.id === crypto)?.symbol);
+      let c =currencies.find((c: Currency) => c.id === crypto);
+      if (!c) {
+        return;
+      }
+      setChain(c.chainId);
+      setSymbol(c.symbol);
     }
-    let currencyCache = JSON.parse(localStorage.getItem(crypto));
+    let currencyCache = JSON.parse(localStorage.getItem(crypto) as string);
     if (!currencyCache || currencyCache.ttl > Date.now()) {
       const response = await axios.get(
         `https://api.coingecko.com/api/v3/coins/${crypto}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
@@ -54,13 +58,13 @@ const PaymentPage = (props: Props) => {
     }
     setExchangeRate(
       currencyCache.data.market_data.current_price[
-        paymentData.currency.toLowerCase()
+        (paymentData?.currency as string).toLowerCase()
       ]
     );
   };
 
   const getAllCurrencies = async () => {
-    let allCurrencies = JSON.parse(localStorage.getItem("currencies"));
+    let allCurrencies = JSON.parse(localStorage.getItem("currencies") as string);
     if (!allCurrencies || allCurrencies.ttl > Date.now()) {
       const currencyData = [
         {
@@ -94,7 +98,7 @@ const PaymentPage = (props: Props) => {
       allCurrencies = newData;
     }
     setCurrencies(
-      allCurrencies.data.map((cD) => ({
+      allCurrencies.data.map((cD: Currency) => ({
         id: cD.id,
         name: cD.name,
         chainId: cD.chainId,
@@ -109,12 +113,12 @@ const PaymentPage = (props: Props) => {
     }
     setUrl(
       `ethereum:pay-${
-        paymentData.address
+        paymentData?.address
       }@${chain}/?value=${ethers.utils.parseEther(
-        (paymentData.amount / 100 / exchangeRate).toFixed(18).toString()
+        (paymentData?.amount as number / 100 / exchangeRate).toFixed(18).toString()
       )}`
     );
-  }, [exchangeRate, paymentData.amount, paymentData.address]);
+  }, [exchangeRate, paymentData?.amount, paymentData?.address, chain]);
 
   useEffect(() => {
     (async () => {
@@ -203,18 +207,18 @@ const PaymentPage = (props: Props) => {
           await axios.put(`https://api-stuniq.onrender.com/api/payments/${paymentId}`, {
             status: "success",
           });
-          router.push(paymentData.s_callback);
+          router.push(paymentData?.s_callback as string);
         } else {
           await axios.put(`https://api-stuniq.onrender.com/api/payments/${paymentId}`, {
             status: "failed",
           });
-          router.push(paymentData.f_callback);
+          router.push(paymentData?.f_callback as string);
         }
       }
     }, 3000);
 
     return () => clearTimeout(tout);
-  }, [paymentData, txnHash, router]);
+  }, [paymentData, txnHash, router, paymentId]);
 
   const payViaMetamaskExt = async (toastNotification: string) => {
     if (address.length <= 0 || !window?.ethereum) {
@@ -228,10 +232,10 @@ const PaymentPage = (props: Props) => {
     const signer = provider.getSigner();
 
     let transaction = await signer.sendTransaction({
-      to: paymentData.address,
+      to: paymentData?.address as string,
       from: await signer.getAddress(),
       value: ethers.utils.parseEther(
-        (paymentData.amount / 100 / exchangeRate).toFixed(18).toString()
+        (paymentData?.amount as number / 100 / exchangeRate).toFixed(18).toString()
       ),
       chainId: parseInt(chain),
     });
@@ -255,12 +259,12 @@ const PaymentPage = (props: Props) => {
                   {/* Merchant Name */}
                   <div className="flex space-x-4 items-center ">
                     <img
-                      src={`https://api.dicebear.com/5.x/initials/svg?seed=${paymentData.merchantName}`}
+                      src={`https://api.dicebear.com/5.x/initials/svg?seed=${paymentData?.merchantName}`}
                       className="w-10 h-10 rounded"
-                      alt={paymentData.merchantName}
+                      alt={paymentData?.merchantName}
                     />
                     <h1 className="text-gray-50 text-xl font-bold">
-                      {paymentData.merchantName}
+                      {paymentData?.merchantName}
                     </h1>
                   </div>
                 </div>
@@ -271,7 +275,7 @@ const PaymentPage = (props: Props) => {
                     Description
                   </h2>
                   <p className="text-gray-50 text-lg">
-                    {paymentData.description}
+                    {paymentData?.description}
                   </p>
                 </div>
 
@@ -280,7 +284,9 @@ const PaymentPage = (props: Props) => {
                   <h2 className="text-3xl text-gray-50 font-bold">
                     Choose Cryptocurrency
                   </h2>
+                 
                   <select
+                   //@ts-ignore
                     ref={selectedCurrency}
                     name="cypto"
                     id="crypto"
@@ -323,9 +329,9 @@ const PaymentPage = (props: Props) => {
                     type="text"
                     value={`${new Intl.NumberFormat("en-IN", {
                       style: "currency",
-                      currency: paymentData.currency,
-                    }).format(paymentData.amount / 100)} ${
-                      paymentData.currency
+                      currency: paymentData?.currency,
+                    }).format(paymentData?.amount as number / 100)} ${
+                      paymentData?.currency
                     }`}
                     disabled
                     className="p-3 text-gray-50 text-xl bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out"
@@ -348,8 +354,8 @@ const PaymentPage = (props: Props) => {
                       type="text"
                       value={`1 ${symbol} = ${new Intl.NumberFormat("en-IN", {
                         style: "currency",
-                        currency: paymentData.currency,
-                      }).format(exchangeRate)} ${paymentData.currency}`}
+                        currency: paymentData?.currency,
+                      }).format(exchangeRate)} ${paymentData?.currency}`}
                       disabled
                       className="p-3 text-gray-50 text-xl bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out"
                     />
@@ -371,7 +377,7 @@ const PaymentPage = (props: Props) => {
                     <input
                       type="text"
                       value={`${
-                        paymentData.amount / 100 / exchangeRate
+                        paymentData?.amount as number / 100 / exchangeRate
                       } ${symbol}`}
                       disabled
                       className="p-3 font-bold text-gray-50 text-xl bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out"
@@ -414,7 +420,7 @@ const PaymentPage = (props: Props) => {
                       {address.length <= 0
                         ? "Connect & Pay using Desktop Wallet"
                         : `Pay ${
-                            paymentData.amount / 100 / exchangeRate
+                            paymentData?.amount as number / 100 / exchangeRate
                           } ${symbol} using Desktop Wallet`}
                     </span>
                   </button>

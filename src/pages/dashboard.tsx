@@ -166,7 +166,7 @@ const DashboardPage = (props: Props) => {
   return (
     <div className="payment-bg h-screen w-screen">
       <Head>
-        <title>Blockpay | Dashboard</title>
+        <title>Stuniq | Dashboard</title>
       </Head>
       <header>
         <Navbar avatar={data?.image} authenticated={true} />

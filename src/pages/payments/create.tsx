@@ -85,7 +85,7 @@ const CreatePaymentPage = (props: Props) => {
   return (
     <div className="payment-bg h-screen w-screen">
       <Head>
-        <title>Blockpay | Create Payment</title>
+        <title>Stuniq | Create Payment</title>
       </Head>
       <header>
         <Navbar avatar={data?.image} authenticated={true} />

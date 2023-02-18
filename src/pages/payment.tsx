@@ -246,7 +246,7 @@ const PaymentPage = (props: Props) => {
   return (
     <>
       <Head>
-        <title>Blockpay | Pay</title>
+        <title>Stuniq | Pay</title>
       </Head>
       <main className="payment-bg h-screen flex items-center justify-center">
         <div className="w-full md:w-[80%] p-10 rounded-lg flex flex-col md:flex-row bg-black bg-opacity-50 backdrop-blur-xl items-center space-x-10">

@@ -41,7 +41,7 @@ const LoginPage = (props: Props) => {
   return (
     <>
       <Head>
-        <title>Blockpay | Login</title>
+        <title>Stuniq | Login</title>
       </Head>
       <header></header>
       <main className="payment-bg h-screen w-screen flex items-center justify-center">

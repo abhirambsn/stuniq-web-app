@@ -49,7 +49,7 @@ const RegisterPage = (props: Props) => {
   return (
     <>
       <Head>
-        <title>Blockpay | Register</title>
+        <title>Stuniq | Register</title>
       </Head>
       <main className="payment-bg h-screen w-screen flex items-center justify-center">
         <div className="flex rounded-lg flex-col md:flex-row bg-black bg-opacity-50">

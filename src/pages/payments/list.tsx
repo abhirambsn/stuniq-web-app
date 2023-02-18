@@ -13,6 +13,7 @@ const PaymentListPage = (props: Props) => {
   const [token, setToken] = useState<string>("");
   const [data, setData] = useState<any>({});
   const [paymentData, setPaymentData] = useState<PaymentData[]>([] as PaymentData[]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,7 +65,7 @@ const PaymentListPage = (props: Props) => {
   return (
     <div className="h-screen w-screen payment-bg">
       <Head>
-        <title>Blockpay | List</title>
+        <title>Stuniq | List</title>
       </Head>
       <header>
         <Navbar avatar={data?.image} authenticated={true} />
@@ -159,8 +160,6 @@ const PaymentListPage = (props: Props) => {
           )}
         </div>
         </div>
-
-        
       </main>
     </div>
   );

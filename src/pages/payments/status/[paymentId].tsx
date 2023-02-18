@@ -66,7 +66,7 @@ const PaymentStatusPage = (props: Props) => {
   return (
     <div className="payment-bg h-screen w-screen">
       <Head>
-        <title>Blockpay | Payment Status</title>
+        <title>Stuniq | Payment Status</title>
       </Head>
       <header>
         <Navbar avatar={data?.image} authenticated={true} />

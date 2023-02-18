@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <div className="bg-[url('/bg.jpg')] bg-cover bg-center">
       <Head>
-        <title>BlockPay</title>
+        <title>Stuniq</title>
         <meta name="description" content="Stuniq - Payments Solutions" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

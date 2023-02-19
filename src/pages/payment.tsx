@@ -40,7 +40,7 @@ const PaymentPage = (props: Props) => {
       crypto = "ethereum";
       setSymbol("ETH");
     } else {
-      let c =currencies.find((c: Currency) => c.id === crypto);
+      let c = currencies.find((c: Currency) => c.id === crypto);
       if (!c) {
         return;
       }
@@ -64,7 +64,9 @@ const PaymentPage = (props: Props) => {
   };
 
   const getAllCurrencies = async () => {
-    let allCurrencies = JSON.parse(localStorage.getItem("currencies") as string);
+    let allCurrencies = JSON.parse(
+      localStorage.getItem("currencies") as string
+    );
     if (!allCurrencies || allCurrencies.ttl > Date.now()) {
       const currencyData = [
         {
@@ -115,7 +117,9 @@ const PaymentPage = (props: Props) => {
       `ethereum:pay-${
         paymentData?.address
       }@${chain}/?value=${ethers.utils.parseEther(
-        (paymentData?.amount as number / 100 / exchangeRate).toFixed(18).toString()
+        ((paymentData?.amount as number) / 100 / exchangeRate)
+          .toFixed(18)
+          .toString()
       )}`
     );
   }, [exchangeRate, paymentData?.amount, paymentData?.address, chain]);
@@ -187,11 +191,13 @@ const PaymentPage = (props: Props) => {
   };
 
   useEffect(() => {
-    const tout = setTimeout(async () => {
+    const tout = setInterval(async () => {
       if (!txnHash) {
         console.warn("Transaction Hash not set yet!");
         return;
       }
+      setInProgress(true);
+      const notification = toast.loading("Verifying Transaction...");
       if (!window?.ethereum) {
         toast.error("Please install Metamask or any other wallet!!");
         return;
@@ -204,20 +210,36 @@ const PaymentPage = (props: Props) => {
         return;
       } else {
         if (txnData.status === 1) {
-          await axios.put(`https://api-stuniq.onrender.com/api/payments/${paymentId}`, {
-            status: "success",
-          });
-          router.push(paymentData?.s_callback as string);
+          await axios.put(
+            `https://api-stuniq.onrender.com/api/payments/${paymentId}`,
+            {
+              status: "success",
+            }
+          );
+          toast.success("Payment Successful", { id: notification });
+          setTimeout(
+            () => router.push(paymentData?.s_callback as string),
+            1000
+          );
+          setInProgress(false);
         } else {
-          await axios.put(`https://api-stuniq.onrender.com/api/payments/${paymentId}`, {
-            status: "failed",
-          });
-          router.push(paymentData?.f_callback as string);
+          await axios.put(
+            `https://api-stuniq.onrender.com/api/payments/${paymentId}`,
+            {
+              status: "failed",
+            }
+          );
+          toast.error("Payment Failed", { id: notification });
+          setTimeout(
+            () => router.push(paymentData?.f_callback as string),
+            1000
+          );
+          setInProgress(false);
         }
       }
     }, 3000);
 
-    return () => clearTimeout(tout);
+    return () => clearInterval(tout);
   }, [paymentData, txnHash, router, paymentId]);
 
   const payViaMetamaskExt = async (toastNotification: string) => {
@@ -235,7 +257,9 @@ const PaymentPage = (props: Props) => {
       to: paymentData?.address as string,
       from: await signer.getAddress(),
       value: ethers.utils.parseEther(
-        (paymentData?.amount as number / 100 / exchangeRate).toFixed(18).toString()
+        ((paymentData?.amount as number) / 100 / exchangeRate)
+          .toFixed(18)
+          .toString()
       ),
       chainId: parseInt(chain),
     });
@@ -284,9 +308,9 @@ const PaymentPage = (props: Props) => {
                   <h2 className="text-3xl text-gray-50 font-bold">
                     Choose Cryptocurrency
                   </h2>
-                 
+
                   <select
-                   //@ts-ignore
+                    //@ts-ignore
                     ref={selectedCurrency}
                     name="cypto"
                     id="crypto"
@@ -330,7 +354,7 @@ const PaymentPage = (props: Props) => {
                     value={`${new Intl.NumberFormat("en-IN", {
                       style: "currency",
                       currency: paymentData?.currency,
-                    }).format(paymentData?.amount as number / 100)} ${
+                    }).format((paymentData?.amount as number) / 100)} ${
                       paymentData?.currency
                     }`}
                     disabled
@@ -377,7 +401,7 @@ const PaymentPage = (props: Props) => {
                     <input
                       type="text"
                       value={`${
-                        paymentData?.amount as number / 100 / exchangeRate
+                        (paymentData?.amount as number) / 100 / exchangeRate
                       } ${symbol}`}
                       disabled
                       className="p-3 font-bold text-gray-50 text-xl bg-transparent focus:outline-none border border-gray-600 hover:border-gray-50 rounded-lg transition-all duration-100 ease-in-out"
@@ -420,7 +444,7 @@ const PaymentPage = (props: Props) => {
                       {address.length <= 0
                         ? "Connect & Pay using Desktop Wallet"
                         : `Pay ${
-                            paymentData?.amount as number / 100 / exchangeRate
+                            (paymentData?.amount as number) / 100 / exchangeRate
                           } ${symbol} using Desktop Wallet`}
                     </span>
                   </button>
